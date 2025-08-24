@@ -3,46 +3,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin, Search, Wrench, Clock, Star, Phone } from "lucide-react";
+import VehicleTracker from "@/components/VehicleTracker";
+import MechanicsList from "@/components/MechanicsList";
 
 const Index = () => {
   const [location, setLocation] = useState("");
   const [vehicleType, setVehicleType] = useState("");
+  const [userLocation, setUserLocation] = useState<{lat: number; lng: number; address: string} | undefined>();
 
-  const featuredMechanics = [
-    {
-      id: 1,
-      name: "Mike's Auto Repair",
-      distance: "0.8 km",
-      rating: 4.8,
-      specialization: "Engine & Transmission",
-      responseTime: "10-15 min",
-      phone: "+1 234-567-8901",
-      availability: "Available",
-      image: "/placeholder.svg"
-    },
-    {
-      id: 2,
-      name: "Highway Heroes Service",
-      distance: "1.2 km",
-      rating: 4.9,
-      specialization: "Emergency Roadside",
-      responseTime: "5-10 min",
-      phone: "+1 234-567-8902",
-      availability: "Available",
-      image: "/placeholder.svg"
-    },
-    {
-      id: 3,
-      name: "Pro-Tech Motors",
-      distance: "2.1 km",
-      rating: 4.7,
-      specialization: "Electrical & Diagnostics",
-      responseTime: "15-20 min",
-      phone: "+1 234-567-8903",
-      availability: "Busy",
-      image: "/placeholder.svg"
-    }
-  ];
+  const handleLocationUpdate = (newLocation: {lat: number; lng: number; address: string}) => {
+    setUserLocation(newLocation);
+    setLocation(newLocation.address);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -105,72 +77,27 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Nearby Mechanics */}
+      {/* Vehicle Tracking & Mechanics List */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-4">
-              Mechanics Near You
-            </h2>
-            <p className="text-muted-foreground">
-              Verified professionals ready to help with your vehicle issues
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredMechanics.map((mechanic) => (
-              <Card key={mechanic.id} className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <CardTitle className="text-lg">{mechanic.name}</CardTitle>
-                      <CardDescription className="flex items-center gap-1 mt-1">
-                        <MapPin className="h-3 w-3" />
-                        {mechanic.distance} away
-                      </CardDescription>
-                    </div>
-                    <div className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      mechanic.availability === 'Available' 
-                        ? 'bg-success/20 text-success' 
-                        : 'bg-warning/20 text-warning'
-                    }`}>
-                      {mechanic.availability}
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      <span className="font-medium">{mechanic.rating}</span>
-                      <span className="text-muted-foreground">rating</span>
-                    </div>
-                    
-                    <div className="flex items-center gap-2">
-                      <Wrench className="h-4 w-4 text-primary" />
-                      <span className="text-sm">{mechanic.specialization}</span>
-                    </div>
-                    
-                    <div className="flex items-center gap-2">
-                      <Clock className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground">
-                        Response: {mechanic.responseTime}
-                      </span>
-                    </div>
-
-                    <div className="flex gap-2 pt-2">
-                      <Button variant="outline" size="sm" className="flex-1">
-                        <Phone className="h-3 w-3 mr-1" />
-                        Call
-                      </Button>
-                      <Button size="sm" className="flex-1">
-                        Request Service
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="grid lg:grid-cols-4 gap-8">
+            {/* Vehicle Tracker Sidebar */}
+            <div className="lg:col-span-1">
+              <VehicleTracker onLocationUpdate={handleLocationUpdate} />
+            </div>
+            
+            {/* Mechanics List */}
+            <div className="lg:col-span-3">
+              <div className="mb-8">
+                <h2 className="text-3xl font-bold text-foreground mb-4">
+                  Available Mechanics
+                </h2>
+                <p className="text-muted-foreground">
+                  Choose from verified professionals within 3-5 km radius
+                </p>
+              </div>
+              <MechanicsList userLocation={userLocation} />
+            </div>
           </div>
         </div>
       </section>
@@ -192,9 +119,9 @@ const Index = () => {
               <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
                 <MapPin className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Location-Based</h3>
+              <h3 className="text-xl font-semibold mb-2">Real-time Tracking</h3>
               <p className="text-muted-foreground">
-                Find the closest mechanics to your exact location for fastest service
+                Track your vehicle and find mechanics within 3-5 km radius instantly
               </p>
             </div>
 
